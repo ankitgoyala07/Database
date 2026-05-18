@@ -1,0 +1,263 @@
+create database HMS;
+
+use HMS;
+
+create table Patient (
+    PatientID int primary key auto_increment,
+    FirstName varchar(50),
+    LastName varchar(50),
+    DateOfBirth date,
+    Gender varchar(10),
+    ContactInfo varchar(100)
+);
+
+
+
+CREATE TABLE Doctor (
+    DoctorID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Specialty VARCHAR(50),
+    Phone VARCHAR(20),
+    Email VARCHAR(100)
+);
+
+
+
+
+CREATE TABLE Appointment (
+    AppointmentID INT PRIMARY KEY AUTO_INCREMENT,
+    PatientID INT,
+    DoctorID INT,
+    AppointmentDate DATE,
+    Reason VARCHAR(100),
+    Status VARCHAR(30),
+    
+    FOREIGN KEY (PatientID) REFERENCES Patient(PatientID),
+    FOREIGN KEY (DoctorID) REFERENCES Doctor(DoctorID)
+);
+
+
+
+
+CREATE TABLE Prescription (
+    PrescriptionID INT PRIMARY KEY AUTO_INCREMENT,
+    PatientID INT,
+    DoctorID INT,
+    Medication VARCHAR(100),
+    Dosage VARCHAR(50),
+    StartDate DATE,
+    EndDate DATE,
+
+    FOREIGN KEY (PatientID) REFERENCES Patient(PatientID),
+    FOREIGN KEY (DoctorID) REFERENCES Doctor(DoctorID)
+);
+
+
+
+
+CREATE TABLE Billing (
+    BillingID INT PRIMARY KEY AUTO_INCREMENT,
+    PatientID INT,
+    Amount DECIMAL(10,2),
+    BillingDate DATE,
+    Status VARCHAR(30),
+
+    FOREIGN KEY (PatientID) REFERENCES Patient(PatientID)
+);
+
+
+
+
+CREATE TABLE MedicalRecord (
+    RecordID INT PRIMARY KEY AUTO_INCREMENT,
+    PatientID INT,
+    Diagnosis VARCHAR(100),
+    Treatment VARCHAR(100),
+    RecordDate DATE,
+    Notes VARCHAR(255),
+
+    FOREIGN KEY (PatientID) REFERENCES Patient(PatientID)
+);
+
+
+
+
+INSERT INTO Patient (FirstName, LastName, DateOfBirth, Gender, ContactInfo) VALUES
+('Ram', 'Sharma', '2000-05-12', 'Male', '9800000001'),
+('Sita', 'Karki', '1999-03-22', 'Female', '9800000002'),
+('Hari', 'Thapa', '2001-07-15', 'Male', '9800000003'),
+('Gita', 'Rai', '2002-01-18', 'Female', '9800000004'),
+('Bikash', 'Yadav', '1998-11-09', 'Male', '9800000005'),
+('Anita', 'Gurung', '2003-09-25', 'Female', '9800000006'),
+('Rohan', 'KC', '1997-04-11', 'Male', '9800000007'),
+('Mina', 'Lama', '2000-08-13', 'Female', '9800000008'),
+('Suman', 'Bhandari', '2001-12-20', 'Male', '9800000009'),
+('Nisha', 'Adhikari', '1999-06-30', 'Female', '9800000010');
+
+
+
+INSERT INTO Doctor (FirstName, LastName, Specialty, Phone, Email) VALUES
+('Amit', 'Joshi', 'Cardiology', '9811111111', 'amit@gmail.com'),
+('Priya', 'Shrestha', 'Neurology', '9811111112', 'priya@gmail.com'),
+('Kiran', 'Rana', 'Orthopedic', '9811111113', 'kiran@gmail.com'),
+('Sneha', 'Poudel', 'Dermatology', '9811111114', 'sneha@gmail.com'),
+('Ritesh', 'Basnet', 'Pediatrics', '9811111115', 'ritesh@gmail.com'),
+('Sunita', 'Thapa', 'ENT', '9811111116', 'sunita@gmail.com'),
+('Bibek', 'Koirala', 'General', '9811111117', 'bibek@gmail.com'),
+('Alina', 'Regmi', 'Gynecology', '9811111118', 'alina@gmail.com'),
+('Dipesh', 'Acharya', 'Surgery', '9811111119', 'dipesh@gmail.com'),
+('Rina', 'Shahi', 'Psychiatry', '9811111120', 'rina@gmail.com');
+
+
+
+INSERT INTO Appointment (PatientID, DoctorID, AppointmentDate, Reason, Status) VALUES
+(1,1,'2026-05-01','Heart Checkup','Completed'),
+(2,2,'2026-05-02','Migraine','Pending'),
+(3,3,'2026-05-03','Leg Pain','Completed'),
+(4,4,'2026-05-04','Skin Allergy','Pending'),
+(5,5,'2026-05-05','Child Fever','Completed'),
+(6,6,'2026-05-06','Ear Pain','Pending'),
+(7,7,'2026-05-07','General Checkup','Completed'),
+(8,8,'2026-05-08','Pregnancy Check','Pending'),
+(9,9,'2026-05-09','Appendix Pain','Completed'),
+(10,10,'2026-05-10','Stress Problem','Pending');
+
+
+
+INSERT INTO Prescription (PatientID, DoctorID, Medication, Dosage, StartDate, EndDate) VALUES
+(1,1,'Aspirin','1 Tablet','2026-05-01','2026-05-10'),
+(2,2,'Paracetamol','2 Tablets','2026-05-02','2026-05-07'),
+(3,3,'Ibuprofen','1 Tablet','2026-05-03','2026-05-08'),
+(4,4,'Cetirizine','1 Tablet','2026-05-04','2026-05-09'),
+(5,5,'Amoxicillin','3 Tablets','2026-05-05','2026-05-12'),
+(6,6,'Ear Drops','2 Drops','2026-05-06','2026-05-11'),
+(7,7,'Vitamin C','1 Tablet','2026-05-07','2026-05-15'),
+(8,8,'Iron Tablet','1 Tablet','2026-05-08','2026-05-18'),
+(9,9,'Painkiller','2 Tablets','2026-05-09','2026-05-14'),
+(10,10,'Sleeping Pills','1 Tablet','2026-05-10','2026-05-20');
+
+
+INSERT INTO Billing (PatientID, Amount, BillingDate, Status) VALUES
+(1,5000,'2026-05-01','Paid'),
+(2,3000,'2026-05-02','Unpaid'),
+(3,4500,'2026-05-03','Paid'),
+(4,2500,'2026-05-04','Pending'),
+(5,6000,'2026-05-05','Paid'),
+(6,3500,'2026-05-06','Unpaid'),
+(7,2000,'2026-05-07','Paid'),
+(8,7000,'2026-05-08','Pending'),
+(9,8000,'2026-05-09','Paid'),
+(10,4000,'2026-05-10','Unpaid');
+
+
+
+INSERT INTO MedicalRecord (PatientID, Diagnosis, Treatment, RecordDate, Notes) VALUES
+(1,'Heart Disease','Medication','2026-05-01','Regular checkup needed'),
+(2,'Migraine','Painkillers','2026-05-02','Avoid stress'),
+(3,'Fracture','Surgery','2026-05-03','Recovery in progress'),
+(4,'Skin Infection','Cream','2026-05-04','Use daily'),
+(5,'Fever','Antibiotics','2026-05-05','Drink water'),
+(6,'Ear Infection','Drops','2026-05-06','No swimming'),
+(7,'Weakness','Vitamins','2026-05-07','Healthy food'),
+(8,'Pregnancy','Routine Care','2026-05-08','Monthly visit'),
+(9,'Appendicitis','Operation','2026-05-09','Rest required'),
+(10,'Anxiety','Therapy','2026-05-10','Counseling advised');
+
+
+
+select patientid, sum(amount) as total_amount
+from billing where status = 'Paid' group by patientid;
+
+
+select doctor.firstname, doctor.lastname, count(appointment.appointmentid) as total_no_of_appointment 
+from doctor 
+join appointment on doctor.doctorid = appointment.doctorid
+group by doctor.doctorid;
+
+
+
+select avg(amount) as average_billing_amount from billing;
+
+
+select max(amount) as hightest_amt,min(amount) as lowest_amt from billing;
+
+
+select doctor.firstname, doctor.lastname, count(*) as total_no_of_prescription 
+from doctor
+join prescription on doctor.doctorid = prescription.doctorid
+group by doctor.doctorid;
+
+
+select patient.firstname, patient.lastname, medicalrecord.diagnosis
+from patient 
+join MedicalRecord on patient.patientid= medicalrecord.patientid;
+
+
+select patient.firstname as patientfirstname, patient.lastname as patientlastname, doctor.firstname as doctorfirstname, doctor.lastname as doctorlastname, appointment.appointmentid
+from appointment 
+join patient on appointment.patientid = patient.patientid
+join doctor on appointment.doctorid = doctor.doctorid;
+
+
+select Prescription.Medication, patient.FirstName as PatientFirstName, patient.LastName as PatientLastName,
+doctor.firstname as DoctorFirstName,
+doctor.LastName as DoctorLastName
+from Prescription 
+join Patient  on Prescription.PatientID = patient.PatientID
+join Doctor  on Prescription.DoctorID = doctor.DoctorID;
+
+
+
+select patient.PatientID, patient.FirstName, patient.LastName,
+billing.Amount, billing.BillingDate, billing.Status
+from Patient 
+left join Billing  on patient.PatientID = billing.PatientID;
+
+
+
+select doctor.DoctorID, doctor.FirstName, doctor.LastName, 
+appointment.AppointmentID, appointment.AppointmentDate, appointment.Reason, appointment.Status
+from Doctor 
+left join Appointment on doctor.DoctorID =appointment.DoctorID;
+
+
+
+select patient.FirstName, patient.LastName, sum(billing.Amount) as TotalBilledAmount
+from Patient 
+join Billing  on patient.PatientID = billing.PatientID
+group by patient.PatientID, patient.FirstName, patient.LastName;
+
+
+
+select appointment.AppointmentDate, appointment.Reason, appointment.Status,
+patient.Gender,
+patient.ContactInfo
+from Appointment 
+join Patient on appointment.PatientID = patient.PatientID;
+
+
+select * from Appointment
+where status = 'Scheduled'and AppointmentDate > '2026-01-01';
+
+
+select * from Patient where FirstName like 'A%';
+
+
+
+select * from Billing where Amount between 500 and 2000;
+
+
+select * from Prescription
+where Medication in ('Paracetamol', 'Ibuprofen', 'Amoxicillin');
+
+
+
+select * from MedicalRecord
+where Treatment like '%Surgery%' or Notes is not null;
+
+
+alter table Patient add BloodGroup varchar(5);
+
+
+alter table Doctor modify Phone varchar(20);

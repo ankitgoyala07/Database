@@ -1,0 +1,114 @@
+create database notice;
+use notice;
+create table user(
+user_id int auto_increment primary key not null,
+username varchar(20) not null,
+user_password varchar(20) not null,
+role varchar(20) not null
+);
+
+insert into user (username, user_password, role) values
+('ram', 'ram123', 'student'),
+('sita', 'sita123', 'student'),
+('hari', 'hari123', 'teacher'),
+('gita', 'gita123', 'teacher'),
+('admin1', 'admin123', 'admin');
+
+create table notices(
+notice_id int auto_increment primary key not null,
+title varchar(20) not null,
+content varchar(20) not null,
+created_by varchar(20) not null,
+created_at datetime
+);
+insert into notices (title, content, created_by, created_at) values
+('Exam Notice', 'Mid ', 'hari', '2026-05-20 10:00:00'),
+('Holiday', 'College  ', 'admin1', '2026-05-21 09:30:00'),
+('Result', 'Results ', 'hari', '2026-05-22 14:15:00'),
+('Meeting', 'Staff ', 'gita', '2026-05-23 11:00:00'),
+('Event', 'Annual  ', 'admin1', '2026-05-24 16:45:00');
+
+
+
+delimiter $$
+create procedure registeruser(in p_username varchar(20), in p_password varchar(50), in p_role varchar(20))
+begin 
+declare exit handler for sqlexception
+begin 
+select 'insertion failled' as status;
+end;
+if p_role not in("teacher" ,"student") then
+select "role musht be teacher or student";
+else
+insert into user(username ,user_password, role) values (p_username,p_password,p_role);
+end if;
+end $$
+delimiter;
+
+drop procedure registeruser;
+call registeruser('ram', 'ram123','student');
+
+
+delimiter $$
+create procedure userlogin(in u_username , in u_password varchar(20))
+begin 
+declare exit hander for sqlexception
+begin 
+select "login failled" as status;
+end;
+ insert into user(username ,user_password) values (p_username,p_password);
+ end$$
+ delimiter;
+ 
+ delimiter $$
+
+create procedure checkpermission(in p_userid int)
+begin 
+declare userrole varchar(20);
+	select role into userrole
+    from users
+    where user_id=p_userid;
+	if userrole <> 'teacher' then
+        signal sqlstate '45000'
+        set message_text='Permission denied. Only teachers allowed.';
+    end if;
+end $$
+
+delimiter ;
+
+delimiter $$
+
+create procedure createnotice(in p_title varchar(100),in p_content text,in p_created_by int)
+begin
+	call checkpermission(p_created_by);
+    insert into notices(title,content,created_by)
+    values(p_title,p_content,p_created_by);
+end $$
+
+delimiter ;
+
+delimiter $$
+
+create procedure viewnotices()
+begin
+    select n.notice_id, n.title, n.content, u.username as created_by, n.created_at
+    from notices n
+    join users u
+    on n.created_by=u.user_id;
+end $$
+
+delimiter ;
+
+
+delimiter $$
+
+call registeruser('ramteacher','12345','teacher');
+
+call registeruser('sita123','11111','student');
+
+call userlogin('ramteacher','12345');
+
+call userlogin('sita123','11111');
+
+
+
